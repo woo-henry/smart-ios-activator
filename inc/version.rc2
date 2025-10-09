@@ -1,0 +1,7 @@
+#define DISPLAY_COMPANY_NAME "SaneSong"
+#define DISPLAY_FILE_VERSION "1,0,0,0"
+#define DISPLAY_LEGAL_COPYRIGHT "Copyright (c) 2007-2025 SaneSong CO.,Ltd."
+#define DISPLAY_PRODUCT_VERSION "1,0,0,0"
+#define DISPLAY_PRODUCT_NAME "Smart Cloud Application"
+#define SYS_FILE_VERSION  1,0,0,0
+#define SYS_PRODUCT_VERSION  1,0,0,0

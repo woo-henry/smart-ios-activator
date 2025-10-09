@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="device_mirror_app.h" />
+    <ClInclude Include="device_mirror_dlg.h" />
+    <ClInclude Include="device_play_dlg.h" />
+    <ClInclude Include="auto_lock.h" />
+    <ClInclude Include="device_player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="device_mirror_dlg.cpp" />
+    <ClCompile Include="device_mirror_app.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="device_play_dlg.cpp" />
+    <ClCompile Include="auto_lock.cc" />
+    <ClCompile Include="device_player.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="smart_ios_activator.rc">
+      <Filter>resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\smart_ios_activator.ico">
+      <Filter>resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\smart_ios_activator.rc2">
+      <Filter>resources</Filter>
+    </None>
+  </ItemGroup>
+</Project>
