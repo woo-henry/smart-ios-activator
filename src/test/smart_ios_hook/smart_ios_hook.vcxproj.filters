@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="hook.h" />
+    <ClInclude Include="hook_log.h" />
+    <ClInclude Include="hook_libplist.h" />
+    <ClInclude Include="hook_ws2_32.h" />
+    <ClInclude Include="hook_utils.h" />
+    <ClInclude Include="hook_kernelbase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="smart_ios_hook.cc" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="hook.cc" />
+    <ClCompile Include="hook_log.cc" />
+    <ClCompile Include="hook_libplist.cc" />
+    <ClCompile Include="hook_ws2_32.cc" />
+    <ClCompile Include="hook_utils.cc" />
+    <ClCompile Include="hook_kernelbase.cc" />
+  </ItemGroup>
+</Project>

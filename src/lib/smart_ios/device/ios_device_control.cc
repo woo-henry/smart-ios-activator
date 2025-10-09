@@ -1,14 +1,8 @@
 #include <smart_base.h>
-#include <smart_adv.h>
 #include <smart_ios.h>
-#include <shlwapi.h>
 #include <setupapi.h>
 #include <boost/algorithm/string.hpp>
 #include "device/ios_device_control.h"
-
-#ifndef MAX_USBMUXD_BUFFER_SIZE
-#define MAX_USBMUXD_BUFFER_SIZE		            1024 * 1024
-#endif // !MAX_USBMUXD_BUFFER_SIZE
 
 #ifndef SMART_THREAD_MINIMUM
 #define	SMART_THREAD_MINIMUM			        8
@@ -134,10 +128,6 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
         }
 
         result = _device_querier->Init();
-        if (result != IOS_ERROR_SUCCESS)
-            break;
-
-        result = StartOrStopAppleMobileDeviceService(false);
         if (result != IOS_ERROR_SUCCESS)
             break;
 
@@ -280,119 +270,4 @@ int iOSDeviceControl::StartUsbmuxdService()
 int iOSDeviceControl::StopUsbmuxdService()
 {
     return SmartProcessManager::TerminateProcessByNameA("usbmuxd.exe");
-}
-
-int iOSDeviceControl::StartOrStopAppleMobileDeviceService(bool start)
-{
-    int result = IOS_ERROR_SUCCESS;
-    char* application_name = nullptr;
-    char* command_line = nullptr;
-    HANDLE process_read_pipe = nullptr;
-    HANDLE process_write_pipe = nullptr;
-
-    do
-    {
-        application_name = (char*)SmartMemAlloc(MAX_PATH);
-        if (application_name == nullptr)
-        {
-            result = ERROR_NOT_ENOUGH_MEMORY;
-            break;
-        }
-
-        if (GetSystemDirectoryA(application_name, MAX_PATH) <= 0)
-        {
-            result = ERROR_PATH_NOT_FOUND;
-            break;
-        }
-
-        if (PathCombineA(application_name, application_name, "sc.exe") == nullptr)
-        {
-            result = ERROR_FILE_NOT_FOUND;
-            break;
-        }
-
-        command_line = (char*)SmartMemAlloc(MAX_PATH);
-        if (command_line == nullptr)
-        {
-            result = ERROR_NOT_ENOUGH_MEMORY;
-            break;
-        }
-
-        if (start)
-        {
-            lstrcpyA(command_line, " start \"Apple Mobile Device Service\"");
-        }
-        else
-        {
-            lstrcpyA(command_line, " stop \"Apple Mobile Device Service\"");
-        }
-
-        SECURITY_ATTRIBUTES pipe_attributes;
-        RtlZeroMemory(&pipe_attributes, sizeof(SECURITY_ATTRIBUTES));
-        pipe_attributes.nLength = sizeof(SECURITY_ATTRIBUTES);
-        pipe_attributes.lpSecurityDescriptor = nullptr;
-        pipe_attributes.bInheritHandle = TRUE;
-        if (!CreatePipe(&process_read_pipe, &process_write_pipe, &pipe_attributes, 0))
-        {
-            result = GetLastError();
-            break;
-        }
-
-        STARTUPINFOA si = { 0 };
-        RtlZeroMemory(&si, sizeof(STARTUPINFO));
-        si.cb = sizeof(STARTUPINFO);
-        si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
-        si.wShowWindow = SW_HIDE;
-        si.hStdOutput = process_write_pipe;
-        si.hStdError = process_write_pipe;
-
-        PROCESS_INFORMATION pi = { 0 };
-        RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-        if (!CreateProcessA(application_name,
-            command_line,
-            &pipe_attributes,
-            &pipe_attributes,
-            TRUE,
-            0x8000020,
-            NULL,
-            NULL,
-            &si,
-            &pi))
-        {
-            result = GetLastError();
-            break;
-        }
-
-        WaitForSingleObject(pi.hProcess, INFINITE);
-
-        CloseHandle(pi.hThread);
-        CloseHandle(pi.hProcess);
-
-    } while (false);
-
-    if (process_read_pipe)
-    {
-        CloseHandle(process_read_pipe);
-        process_read_pipe = nullptr;
-    }
-
-    if (process_write_pipe)
-    {
-        CloseHandle(process_write_pipe);
-        process_write_pipe = nullptr;
-    }
-
-    if (command_line)
-    {
-        SmartMemFree(command_line);
-        command_line = nullptr;
-    }
-
-    if (system_directory)
-    {
-        SmartMemFree(system_directory);
-        system_directory = nullptr;
-    }
-
-    return result;
 }

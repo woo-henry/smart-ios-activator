@@ -66,6 +66,5 @@ Thumbs.db
 *.recipe
 *.pdb
 *.aps
-/3rdparty/lib
 *.idb
 /lib

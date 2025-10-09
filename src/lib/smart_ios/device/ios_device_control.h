@@ -2,6 +2,7 @@
 #define _IOS_DEVICE_CONTROL_H_
 #pragma once
 
+#include <smart_adv.h>
 #include "device/ios_device_license.h"
 #include "device/ios_device_list.h"
 #include "device/ios_device_enumerator.h"
@@ -24,7 +25,6 @@ protected:
 private:
 	int StartUsbmuxdService();
 	int StopUsbmuxdService();
-	int StartOrStopAppleMobileDeviceService(bool start);	
 private:
 	SmartThreadPool*				_thread_pool;
 	void*							_device_context;

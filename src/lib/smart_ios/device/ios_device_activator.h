@@ -15,6 +15,8 @@ public:
 	void Dispose();
 	int ActivateDevice(const char* device_id, bool skip_install_setup);
 	int DeactivateDevice(const char* device_id);
+protected:
+	int StartOrStopAppleMobileDeviceService(bool start);
 };
 
 #endif // _IOS_DEVICE_ACTIVATOR_H_
