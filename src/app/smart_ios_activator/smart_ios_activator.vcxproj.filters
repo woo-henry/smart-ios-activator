@@ -11,19 +11,13 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="device_mirror_app.h" />
-    <ClInclude Include="device_mirror_dlg.h" />
-    <ClInclude Include="device_play_dlg.h" />
-    <ClInclude Include="auto_lock.h" />
-    <ClInclude Include="device_player.h" />
+    <ClInclude Include="smart_ios_activator_app.h" />
+    <ClInclude Include="smart_ios_activator_dlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="device_mirror_dlg.cpp" />
-    <ClCompile Include="device_mirror_app.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="device_play_dlg.cpp" />
-    <ClCompile Include="auto_lock.cc" />
-    <ClCompile Include="device_player.cc" />
+    <ClCompile Include="smart_ios_activator_app.cc" />
+    <ClCompile Include="smart_ios_activator_dlg.cc" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="smart_ios_activator.rc">

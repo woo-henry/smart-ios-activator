@@ -117,3 +117,22 @@ int IOS_API DeactivateiOSDevice(const char* device_id)
 
     return result;
 }
+
+int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated)
+{
+    int result = IOS_ERROR_SUCCESS;
+
+    do
+    {
+        if (ios_device_control == nullptr)
+        {
+            result = IOS_ERROR_OBJECT_IS_EMPTY;
+            break;
+        }
+
+        result = ios_device_control->QueryDeviceState(device_id, activated);
+
+    } while (false);
+
+    return result;
+}

@@ -10,12 +10,12 @@ LONG StartHooks()
 
     do
     {
-        MessageBox(NULL, TEXT("StartHooks"), TEXT("Hook"), MB_OK);
+        MessageBox(nullptr, TEXT("StartHooks"), TEXT("Hook"), MB_OK);
 
         result = InitLog();
         if (result != ERROR_SUCCESS)
         {
-            MessageBox(NULL, TEXT("InitLog Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("InitLog Error"), TEXT("Hook"), MB_OK);
             break;
         }
 

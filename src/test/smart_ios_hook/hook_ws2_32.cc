@@ -50,7 +50,7 @@ LONG StartHookWS2_32_API()
         ws2_32_module = GetModuleHandle(TEXT("ws2_32.dll"));
         if (ws2_32_module == nullptr)
         {
-            MessageBox(NULL, TEXT("LoadLibrary ws2_32 Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("LoadLibrary ws2_32 Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -58,7 +58,7 @@ LONG StartHookWS2_32_API()
         trust_connect = (pfn_connect)GetProcAddress(ws2_32_module, "connect");
         if (trust_connect == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress connect Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress connect Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -66,7 +66,7 @@ LONG StartHookWS2_32_API()
         trust_send = (pfn_send)GetProcAddress(ws2_32_module, "send");
         if (trust_send == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress send Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress send Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -74,7 +74,7 @@ LONG StartHookWS2_32_API()
         trust_recv = (pfn_recv)GetProcAddress(ws2_32_module, "recv");
         if (trust_recv == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress recv Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress recv Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }

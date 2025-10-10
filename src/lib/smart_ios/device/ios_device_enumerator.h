@@ -2,6 +2,7 @@
 #define _IOS_DEVICE_ENUMERATOR_H_
 #pragma once
 
+#include <atomic>
 #include <smart_adv.h>
 #include <smart_ios.h>
 

@@ -4,6 +4,10 @@
 
 #include <smart_adv.h>
 #include <smart_ios.h>
+#include <libimobiledevice/libimobiledevice.h>
+#include <libimobiledevice/lockdown.h>
+#include <libimobiledevice/mobileactivation.h>
+#include <libideviceactivation.h>
 
 class iOSDeviceActivator
 {
@@ -15,7 +19,11 @@ public:
 	void Dispose();
 	int ActivateDevice(const char* device_id, bool skip_install_setup);
 	int DeactivateDevice(const char* device_id);
+	int QueryDeviceState(const char* device_id, bool* activated);
 protected:
+	int GetMobileActivationClient(idevice_t device, lockdownd_client_t lockdown, mobileactivation_client_t* mobileactivation_client);
+	uint32_t GetProductVersion(lockdownd_client_t lockdown);
+	int GetActivationState(lockdownd_client_t lockdown, char** activation_state_string);
 	int StartOrStopAppleMobileDeviceService(bool start);
 };
 

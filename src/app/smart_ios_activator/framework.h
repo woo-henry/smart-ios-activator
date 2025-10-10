@@ -18,28 +18,9 @@
 #include <afxcontrolbars.h>     // MFC support for ribbons and control bars
 #include <afxsock.h>            // MFC socket extensions
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-#include <libavutil/avutil.h>
-#include <libavutil/mastering_display_metadata.h>
-#include <libavutil/pixdesc.h>
-#include <libavutil/hwcontext.h>
-#include <libswscale/swscale.h>
-#ifdef __cplusplus
-};
-#endif
-
-#include <libavutil/hwcontext_d3d11va.h>
-#include <SDL3/SDL.h>
-
 #include <smart_base.h>
 #include <smart_adv.h>
 #include <smart_ios.h>
-#include "auto_lock.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

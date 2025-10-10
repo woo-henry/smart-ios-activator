@@ -28,11 +28,12 @@ typedef struct tagIosDevice
 {
 	char	device_id[MAX_PATH];
 	char	device_name[MAX_PATH];
+	char	serial_number[MAX_PATH];
 	char	product_name[MAX_PATH];
+	char	product_type[MAX_PATH];
 	char	product_version[MAX_PATH];
 	char	phone_number[MAX_PATH];
-	char	serial_number[MAX_PATH];
-	bool	device_paired;
+	bool	activated;
 } IosDevice;
 
 typedef struct tagAudioFrame

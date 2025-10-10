@@ -16,16 +16,22 @@ iOSDeviceControl::iOSDeviceControl(void* device_context, iOSDeviceCallbacks* dev
     : _thread_pool(nullptr)
     , _device_context(device_context)
     , _device_callbacks(device_callbacks)
-    , _device_license(nullptr)
     , _device_list(nullptr)
     , _device_enumerator(nullptr)
     , _device_querier(nullptr)
+    , _device_activator(nullptr)
 {
     
 }
 
 iOSDeviceControl::~iOSDeviceControl()
 {
+    if (_device_activator)
+    {
+        _device_activator->Dispose();
+        _device_activator = nullptr;
+    }
+
     if (_device_querier)
     {
         _device_querier->Dispose();
@@ -44,13 +50,7 @@ iOSDeviceControl::~iOSDeviceControl()
         _device_list = nullptr;
     }
 
-    if (_device_license)
-    {
-        _device_license->Dispose();
-        _device_license = nullptr;
-    }
-
-    StopUsbmuxdService();
+    StopAppleMobileService();
 
     if (_thread_pool)
     {
@@ -65,7 +65,7 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
 
     do
     {
-        StopUsbmuxdService();
+        StopAppleMobileService();
 
         _thread_pool = SmartThreadPoolFactory::CreateThreadPool();
         if (_thread_pool == nullptr)
@@ -78,20 +78,6 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
         if (result != IOS_ERROR_SUCCESS)
         {
             result = IOS_ERROR_THREADPOOL_NOT_INITED;
-            break;
-        }
-
-        _device_license = new iOSDeviceLicense(_thread_pool, this);
-        if (_device_license == nullptr)
-        {
-            result = IOS_ERROR_LICENSE_NOT_CREATED;
-            break;
-        }
-
-        result = _device_license->Init(license_file, license_password);
-        if (result != IOS_ERROR_SUCCESS)
-        {
-            result = IOS_ERROR_LICENSE_NOT_INITED;
             break;
         }
 
@@ -131,7 +117,18 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
         if (result != IOS_ERROR_SUCCESS)
             break;
 
-        result = StartUsbmuxdService();
+        _device_activator = new iOSDeviceActivator(_thread_pool, _device_context, _device_callbacks);
+        if (_device_activator == nullptr)
+        {
+            result = ERROR_NOT_ENOUGH_MEMORY;
+            break;
+        }
+
+        result = _device_activator->Init();
+        if (result != IOS_ERROR_SUCCESS)
+            break;
+
+        result = StartAppleMobileService();
         if (result != IOS_ERROR_SUCCESS)
             break;
 
@@ -151,14 +148,6 @@ int iOSDeviceControl::QueryDevice(const char* device_id)
 
     do
     {
-        int license_count = _device_license->GetLicenseCount();
-        int device_count = _device_list->GetDeviceCount();
-        if (device_count > license_count)
-        {
-            result = IOS_ERROR_LICENSE_EXCEEDING_QUANTITY;
-            break;
-        }
-
         result = _device_querier->QueryDevice(device_id);
 
     } while (false);
@@ -172,15 +161,7 @@ int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_se
 
     do
     {
-        int license_count = _device_license->GetLicenseCount();
-        int device_count = _device_list->GetDeviceCount();
-        if (device_count > license_count)
-        {
-            result = IOS_ERROR_LICENSE_EXCEEDING_QUANTITY;
-            break;
-        }
-
-        result = _device_querier->QueryDevice(device_id);
+        result = _device_activator->ActivateDevice(device_id, skip_install_setup);
 
     } while (false);
 
@@ -193,37 +174,34 @@ int iOSDeviceControl::DeactivateDevice(const char* device_id)
 
     do
     {
-        int license_count = _device_license->GetLicenseCount();
-        int device_count = _device_list->GetDeviceCount();
-        if (device_count > license_count)
-        {
-            result = IOS_ERROR_LICENSE_EXCEEDING_QUANTITY;
-            break;
-        }
-
-        result = _device_querier->QueryDevice(device_id);
+        result = _device_activator->DeactivateDevice(device_id);
 
     } while (false);
 
     return result;
 }
 
-void iOSDeviceControl::OnLicenseError(const char* message)
+int iOSDeviceControl::QueryDeviceState(const char* device_id, bool* activated)
 {
-    if (message)
+    int result = IOS_ERROR_SUCCESS;
+
+    do
     {
-        SmartLogError(message);
-    }
+        result = _device_activator->QueryDeviceState(device_id, activated);
+
+    } while (false);
+
+    return result;
 }
 
-int iOSDeviceControl::StartUsbmuxdService()
+int iOSDeviceControl::StartAppleMobileService()
 {
     int result = IOS_ERROR_SUCCESS;
     char* usbmuxd_path = nullptr;
 
     do
     {
-        if (SmartProcessManager::IsProcessRunningA("usbmuxd.exe"))
+        if (SmartProcessManager::IsProcessRunningA("apple-mobile-service.exe"))
             break;
 
         usbmuxd_path = (char*)SmartMemAlloc(MAX_PATH * sizeof(char));
@@ -233,7 +211,7 @@ int iOSDeviceControl::StartUsbmuxdService()
             break;
         }
 
-        if (!SmartFsGetAppPathA(usbmuxd_path, "usbmuxd\\usbmuxd.exe"))
+        if (!SmartFsGetAppPathA(usbmuxd_path, "tools\\apple-mobile-service.exe"))
         {
             result = ERROR_FILE_NOT_FOUND;
             break;
@@ -247,7 +225,7 @@ int iOSDeviceControl::StartUsbmuxdService()
 
         PROCESS_INFORMATION pi = { 0 };
         RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-        if (!CreateProcessA(NULL, usbmuxd_path, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+        if (!CreateProcessA(nullptr, usbmuxd_path, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
         {
             result = GetLastError();
             break;
@@ -267,7 +245,7 @@ int iOSDeviceControl::StartUsbmuxdService()
     return result;
 }
 
-int iOSDeviceControl::StopUsbmuxdService()
+int iOSDeviceControl::StopAppleMobileService()
 {
-    return SmartProcessManager::TerminateProcessByNameA("usbmuxd.exe");
+    return SmartProcessManager::TerminateProcessByNameA("apple-mobile-service.exe");
 }

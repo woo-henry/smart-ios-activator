@@ -19,24 +19,12 @@ typedef void (*iOSDeviceQueryCallback)(void* context,
 	const char* product_type,
 	const char* product_version,
 	const char* phone_number);
-typedef void (*iOSDeviceActivateStartCallback)(void* context, const char* device_id);
-typedef void (*iOSDeviceActivateProgressCallback)(void* context, const char* device_id, unsigned int progress);
-typedef void (*iOSDeviceActivateCompleteCallback)(void* context, const char* device_id);
-typedef void (*iOSDeviceDeactivateStartCallback)(void* context, const char* device_id);
-typedef void (*iOSDeviceDeactivateProgressCallback)(void* context, const char* device_id, unsigned int progress);
-typedef void (*iOSDeviceDeactivateCompleteCallback)(void* context, const char* device_id);
 typedef void (*iOSDeviceErrorCallback)(void* context, const char* device_id, int error_code);
 typedef struct tagiOSDeviceCallbacks
 {
 	iOSDeviceConnectedCallback			callback_connected;
 	iOSDeviceDisconnectedCallback		callback_disconnected;
 	iOSDeviceQueryCallback				callback_query;
-	iOSDeviceActivateStartCallback		callback_activate_start;
-	iOSDeviceActivateProgressCallback	callback_activate_progress;
-	iOSDeviceActivateCompleteCallback	callback_activate_complete;
-	iOSDeviceDeactivateStartCallback	callback_deactivate_start;
-	iOSDeviceDeactivateProgressCallback	callback_deactivate_progress;
-	iOSDeviceDeactivateCompleteCallback	callback_deactivate_complete;
 	iOSDeviceErrorCallback				callback_error;
 } iOSDeviceCallbacks;
 
@@ -45,6 +33,7 @@ int IOS_API ShutdowniOSDeviceEnviroment();
 int IOS_API QueryiOSDevice(const char* device_id);
 int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup = true);
 int IOS_API DeactivateiOSDevice(const char* device_id);
+int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated);
 
 #ifdef __cplusplus
 };

@@ -149,7 +149,7 @@ LONG StartHookKernelBase()
         kernel_base_module = GetModuleHandle(TEXT("KernelBase.dll"));
         if (kernel_base_module == nullptr)
         {
-            MessageBox(NULL, TEXT("LoadLibrary KernelBase Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("LoadLibrary KernelBase Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -157,7 +157,7 @@ LONG StartHookKernelBase()
         TrustSleep = (PfnSleep)GetProcAddress(kernel_base_module, "Sleep");
         if (TrustSleep == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress Sleep Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress Sleep Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -165,7 +165,7 @@ LONG StartHookKernelBase()
         TrustGetTickCount64 = (PfnGetTickCount64)GetProcAddress(kernel_base_module, "GetTickCount64");
         if (TrustGetTickCount64 == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress GetTickCount64 Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress GetTickCount64 Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -173,7 +173,7 @@ LONG StartHookKernelBase()
         TrustDeviceIoControl = (PfnDeviceIoControl)GetProcAddress(kernel_base_module, "DeviceIoControl");
         if (TrustDeviceIoControl == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress DeviceIoControl Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress DeviceIoControl Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -181,7 +181,7 @@ LONG StartHookKernelBase()
         TrustGetOverlappedResult = (PfnGetOverlappedResult)GetProcAddress(kernel_base_module, "GetOverlappedResult");
         if (TrustGetOverlappedResult == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress GetOverlappedResult Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress GetOverlappedResult Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -189,7 +189,7 @@ LONG StartHookKernelBase()
         TrustCreateFileW = (PfnCreateFileW)GetProcAddress(kernel_base_module, "CreateFileW");
         if (TrustCreateFileW == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress CreateFileW Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress CreateFileW Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -197,7 +197,7 @@ LONG StartHookKernelBase()
         TrustReadFile = (PfnReadFile)GetProcAddress(kernel_base_module, "ReadFile");
         if (TrustReadFile == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress ReadFile Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress ReadFile Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }
@@ -205,7 +205,7 @@ LONG StartHookKernelBase()
         TrustCreateProcessA = (PfnCreateProcessA)GetProcAddress(kernel_base_module, "CreateProcessA");
         if (TrustCreateProcessA == nullptr)
         {
-            MessageBox(NULL, TEXT("GetProcAddress CreateProcessA Error"), TEXT("Hook"), MB_OK);
+            MessageBox(nullptr, TEXT("GetProcAddress CreateProcessA Error"), TEXT("Hook"), MB_OK);
             result = GetLastError();
             break;
         }

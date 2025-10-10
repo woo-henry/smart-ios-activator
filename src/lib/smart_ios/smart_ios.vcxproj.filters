@@ -17,9 +17,6 @@
     <ClCompile Include="device\ios_device_instance.cc">
       <Filter>device</Filter>
     </ClCompile>
-    <ClCompile Include="device\ios_device_license.cc">
-      <Filter>device</Filter>
-    </ClCompile>
     <ClCompile Include="device\ios_device_list.cc">
       <Filter>device</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
       <Filter>device</Filter>
     </ClInclude>
     <ClInclude Include="device\ios_device_instance.h">
-      <Filter>device</Filter>
-    </ClInclude>
-    <ClInclude Include="device\ios_device_license.h">
       <Filter>device</Filter>
     </ClInclude>
     <ClInclude Include="device\ios_device_list.h">

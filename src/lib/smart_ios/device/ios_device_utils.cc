@@ -44,7 +44,7 @@ bool CompareProcessBufferA(const char* process_path, const char** compare_string
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyA(process_commandline, process_path);
-		if (!CreateProcessA(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessA(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		CloseHandle(pi.hThread);
@@ -136,7 +136,7 @@ bool CompareProcessBufferW(const wchar_t* process_path, const wchar_t** compare_
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyW(process_commandline, process_path);
-		if (!CreateProcessW(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessW(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		CloseHandle(pi.hThread);
@@ -226,7 +226,7 @@ bool ReadProcessBufferA(const char* process_path, bool sync_process, char* proce
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyA(process_commandline, process_path);
-		if (!CreateProcessA(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessA(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		if (sync_process)
@@ -307,7 +307,7 @@ bool ReadProcessBufferW(const wchar_t* process_path, bool sync_process, wchar_t*
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyW(process_commandline, process_path);
-		if (!CreateProcessW(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessW(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		if (sync_process)
@@ -397,7 +397,7 @@ bool ReadAndCompareProcessBufferA(const char* process_path, bool sync_process, c
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyA(process_commandline, process_path);
-		if (!CreateProcessA(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessA(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		if (sync_process)
@@ -523,7 +523,7 @@ bool ReadAndCompareProcessBufferW(const wchar_t* process_path, bool sync_process
 		PROCESS_INFORMATION pi = { 0 };
 		RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
 		lstrcpyW(process_commandline, process_path);
-		if (!CreateProcessW(NULL, process_commandline, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+		if (!CreateProcessW(nullptr, process_commandline, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
 			break;
 
 		if (sync_process)

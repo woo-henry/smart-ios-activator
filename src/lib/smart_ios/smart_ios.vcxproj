@@ -104,7 +104,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libssld.lib;libcryptod.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libcurld.lib;libssld.lib;libcryptod.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x86\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -128,7 +128,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libssl.lib;libcrypto.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libcurl.lib;libssl.lib;libcrypto.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x86\$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -136,7 +136,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;WIN64;_WIN64;_DEBUG;_WINDOWS;_UNICODE;_USRDLL;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;HAVE_CONFIG_H;HAVE_OPENSSL;SMART_IOS_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN64;_WIN64;_DEBUG;_WINDOWS;_UNICODE;_USRDLL;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;CURL_STATICLIB;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;HAVE_CONFIG_H;HAVE_OPENSSL;SMART_IOS_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -148,12 +148,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libssld.lib;libcryptod.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libcurld.lib;libssld.lib;libcryptod.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x64\$(TargetName).lib</ImportLibrary>
       <HeapReserveSize>268435456</HeapReserveSize>
       <StackReserveSize>268435456</StackReserveSize>
       <HeapCommitSize>268435456</HeapCommitSize>
       <StackCommitSize>268435456</StackCommitSize>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -162,7 +164,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN64;_WIN64;NDEBUG;_WINDOWS;_UNICODE;_USRDLL;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;SMART_IOS_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN64;_WIN64;NDEBUG;_WINDOWS;_UNICODE;_USRDLL;_CRT_SECURE_NO_WARNINGS;CURL_STATICLIB;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;HAVE_CONFIG_H;HAVE_OPENSSL;SMART_IOS_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -178,7 +180,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libssl.lib;libcrypto.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libcurl.lib;libssl.lib;libcrypto.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x64\$(TargetName).lib</ImportLibrary>
       <HeapReserveSize>
       </HeapReserveSize>
@@ -188,6 +190,8 @@
       </StackReserveSize>
       <StackCommitSize>
       </StackCommitSize>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -195,7 +199,6 @@
     <ClCompile Include="device\ios_device_control.cc" />
     <ClCompile Include="device\ios_device_enumerator.cc" />
     <ClCompile Include="device\ios_device_instance.cc" />
-    <ClCompile Include="device\ios_device_license.cc" />
     <ClCompile Include="device\ios_device_list.cc" />
     <ClCompile Include="device\ios_device_querier.cc" />
     <ClCompile Include="device\ios_device_command_info.cc" />
@@ -210,7 +213,6 @@
     <ClInclude Include="device\ios_device_control.h" />
     <ClInclude Include="device\ios_device_enumerator.h" />
     <ClInclude Include="device\ios_device_instance.h" />
-    <ClInclude Include="device\ios_device_license.h" />
     <ClInclude Include="device\ios_device_list.h" />
     <ClInclude Include="device\ios_device_querier.h" />
     <ClInclude Include="device\ios_device_command_info.h" />
