@@ -199,6 +199,7 @@
     <ClCompile Include="device\ios_device_control.cc" />
     <ClCompile Include="device\ios_device_enumerator.cc" />
     <ClCompile Include="device\ios_device_instance.cc" />
+    <ClCompile Include="device\ios_device_license.cc" />
     <ClCompile Include="device\ios_device_list.cc" />
     <ClCompile Include="device\ios_device_querier.cc" />
     <ClCompile Include="device\ios_device_command_info.cc" />
@@ -213,6 +214,7 @@
     <ClInclude Include="device\ios_device_control.h" />
     <ClInclude Include="device\ios_device_enumerator.h" />
     <ClInclude Include="device\ios_device_instance.h" />
+    <ClInclude Include="device\ios_device_license.h" />
     <ClInclude Include="device\ios_device_list.h" />
     <ClInclude Include="device\ios_device_querier.h" />
     <ClInclude Include="device\ios_device_command_info.h" />

@@ -10,6 +10,8 @@ BEGIN_MESSAGE_MAP(SmartiOSActivatorDlg, CDialogEx)
 	ON_MESSAGE(WM_IOS_DEVICE_OBJECT_REMOVE, OnMessageDeviceObjectRemove)
 	ON_MESSAGE(WM_IOS_DEVICE_OBJECT_UPDATE, OnMessageDeviceObjectUpdate)
 	ON_MESSAGE(WM_IOS_DEVICE_STATUS_UPDATE, OnMessageDeviceStatusUpdate)
+	ON_MESSAGE(WM_IOS_DEVICE_MESSAGE_SUCCESS, OnMessageDeviceMessageSuccess)
+	ON_MESSAGE(WM_IOS_DEVICE_MESSAGE_ERROR, OnMessageDeviceMessageError)
 	ON_NOTIFY(NM_RCLICK, IDC_LIST_DEVICE, &SmartiOSActivatorDlg::OnRightClickListDevice)
 	ON_COMMAND(IDC_ACTIVATE, &SmartiOSActivatorDlg::OnCommandDeviceActivate)
 	ON_COMMAND(IDC_DEACTIVATE, &SmartiOSActivatorDlg::OnCommandDeviceDeactivate)
@@ -357,6 +359,66 @@ LRESULT SmartiOSActivatorDlg::OnMessageDeviceStatusUpdate(WPARAM wparam, LPARAM 
 	return result;
 }
 
+LRESULT SmartiOSActivatorDlg::OnMessageDeviceMessageSuccess(WPARAM wparam, LPARAM lparam)
+{
+	LRESULT result = ERROR_SUCCESS;
+	char* device_id = nullptr;
+
+	do
+	{
+		device_id = (char*)wparam;
+		if (device_id == nullptr)
+			break;
+
+		CStringA message;
+		message.Format("设备[%s]激活成功\r\n请断开连接，并在屏幕上点击继续，以便设备完成自动激活过程！", device_id);
+		MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONINFORMATION);
+
+	} while (false);
+
+	if (device_id)
+	{
+		SmartMemFree(device_id);
+		device_id = nullptr;
+	}
+
+	return result;
+}
+
+LRESULT SmartiOSActivatorDlg::OnMessageDeviceMessageError(WPARAM wparam, LPARAM lparam)
+{
+	LRESULT result = ERROR_SUCCESS;
+	char* device_id = nullptr;
+
+	do
+	{
+		device_id = (char*)wparam;
+		if (device_id == nullptr)
+			break;
+
+		if (lparam == -2)
+		{
+			CStringA message;
+			message.Format("设备[%s]激活成功\r\n请断开连接，并在屏幕上点击继续，以便设备完成自动激活过程！", device_id);
+			MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONINFORMATION);
+		}
+		else
+		{
+			CStringA message;
+			message.Format("设备[%s]激活失败\r\n错误代码：%d", device_id, (int)lparam);
+			MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONERROR);
+		}
+	} while (false);
+
+	if (device_id)
+	{
+		SmartMemFree(device_id);
+		device_id = nullptr;
+	}
+
+	return result;
+}
+
 void SmartiOSActivatorDlg::OnRightClickListDevice(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	int selected_count = _device_listctrl.GetSelectedCount();
@@ -447,6 +509,11 @@ void SmartiOSActivatorDlg::OnCommandDeviceDeactivate()
 		if (result != ERROR_SUCCESS)
 		{
 			AfxMessageBox(TEXT("设备反激活失败！"));
+		}
+		else
+		{
+			AfxMessageBox(TEXT("设备反激活成功！"));
+			_device_listctrl.SetItemText(index, 7, TEXT("未激活"));
 		}
 	}
 
@@ -659,16 +726,14 @@ DWORD WINAPI SmartiOSActivatorDlg::ActivateDeviceThreadRoutine(PVOID parameter)
 		result = ActivateiOSDevice(device_id);
 		if (result != ERROR_SUCCESS)
 		{
+			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)device_id, (LPARAM)result);
 			SmartLogError("Activate iOS Device[%s] Error : %d", device_id, result);
 		}
-
+		else
+		{
+			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)device_id, (LPARAM)result);
+		}
 	} while (false);
-
-	if (device_id)
-	{
-		SmartMemFree(device_id);
-		device_id = nullptr;
-	}
 
 	return result;
 }
@@ -689,11 +754,21 @@ DWORD WINAPI SmartiOSActivatorDlg::ActivateAllDeviceThreadRoutine(PVOID paramete
 
 		for (std::vector<std::string>::const_iterator it = device_ids->begin(); it != device_ids->end(); it++)
 		{
-			std::string device_id = *it;
-			result = ActivateiOSDevice(device_id.c_str());
-			if (result != ERROR_SUCCESS)
+			std::string device_id_string = *it;
+			char* device_id = (char*)SmartMemAlloc(device_id_string.length() + 1);
+			if (device_id)
 			{
-				SmartLogError("Activate iOS Device[%s] Error : %d", device_id, result);
+				lstrcpyA(device_id, device_id_string.c_str());
+				result = ActivateiOSDevice(device_id);
+				if (result != ERROR_SUCCESS)
+				{
+					AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)device_id, (LPARAM)result);
+					SmartLogError("Activate iOS Device[%s] Error : %d", device_id, result);
+				}
+				else
+				{
+					AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)device_id);
+				}
 			}
 		}
 	} while (false);

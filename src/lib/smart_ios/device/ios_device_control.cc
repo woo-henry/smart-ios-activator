@@ -16,6 +16,7 @@ iOSDeviceControl::iOSDeviceControl(void* device_context, iOSDeviceCallbacks* dev
     : _thread_pool(nullptr)
     , _device_context(device_context)
     , _device_callbacks(device_callbacks)
+    , _device_license(nullptr)
     , _device_list(nullptr)
     , _device_enumerator(nullptr)
     , _device_querier(nullptr)
@@ -50,6 +51,12 @@ iOSDeviceControl::~iOSDeviceControl()
         _device_list = nullptr;
     }
 
+    if (_device_license)
+    {
+        _device_license->Dispose();
+        _device_license = nullptr;
+    }
+
     StopAppleMobileService();
 
     if (_thread_pool)
@@ -78,6 +85,20 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
         if (result != IOS_ERROR_SUCCESS)
         {
             result = IOS_ERROR_THREADPOOL_NOT_INITED;
+            break;
+        }
+
+        _device_license = new iOSDeviceLicense(_thread_pool, this);
+        if (_device_license == nullptr)
+        {
+            result = IOS_ERROR_DEVICE_LIST_NOT_CREATED;
+            break;
+        }
+
+        result = _device_license->Init(license_file, license_password);
+        if (result != IOS_ERROR_SUCCESS)
+        {
+            result = IOS_ERROR_OBJECT_NOT_INITED;
             break;
         }
 
@@ -161,8 +182,20 @@ int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_se
 
     do
     {
-        result = _device_activator->ActivateDevice(device_id, skip_install_setup);
+        int license_count = _device_license->GetLicenseCount();
+        int device_count = _device_list->GetDeviceCount();
+        if (device_count > license_count)
+        {
+            result = IOS_ERROR_LICENSE_EXCEEDING_QUANTITY;
+            break;
+        }
 
+        result = _device_activator->ActivateDeviceEx(device_id, skip_install_setup);
+        if (result == ERROR_SUCCESS)
+            break;
+
+        result = _device_activator->ActivateDevice(device_id, skip_install_setup);
+     
     } while (false);
 
     return result;
@@ -174,6 +207,14 @@ int iOSDeviceControl::DeactivateDevice(const char* device_id)
 
     do
     {
+        int license_count = _device_license->GetLicenseCount();
+        int device_count = _device_list->GetDeviceCount();
+        if (device_count > license_count)
+        {
+            result = IOS_ERROR_LICENSE_EXCEEDING_QUANTITY;
+            break;
+        }
+
         result = _device_activator->DeactivateDevice(device_id);
 
     } while (false);
@@ -192,6 +233,11 @@ int iOSDeviceControl::QueryDeviceState(const char* device_id, bool* activated)
     } while (false);
 
     return result;
+}
+
+void iOSDeviceControl::OnLicenseError(const char* message)
+{
+    SmartLogError("%s", message);
 }
 
 int iOSDeviceControl::StartAppleMobileService()

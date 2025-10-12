@@ -18,6 +18,7 @@ public:
 	int Init();
 	void Dispose();
 	int ActivateDevice(const char* device_id, bool skip_install_setup);
+	int ActivateDeviceEx(const char* device_id, bool skip_install_setup);
 	int DeactivateDevice(const char* device_id);
 	int QueryDeviceState(const char* device_id, bool* activated);
 protected:

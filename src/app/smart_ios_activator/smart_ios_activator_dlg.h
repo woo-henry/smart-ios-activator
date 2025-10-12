@@ -22,6 +22,8 @@ protected:
 	afx_msg LRESULT OnMessageDeviceObjectRemove(WPARAM wparam, LPARAM lparam);
 	afx_msg LRESULT OnMessageDeviceObjectUpdate(WPARAM wparam, LPARAM lparam);
 	afx_msg LRESULT OnMessageDeviceStatusUpdate(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMessageDeviceMessageSuccess(WPARAM wparam, LPARAM lparam);
+	afx_msg LRESULT OnMessageDeviceMessageError(WPARAM wparam, LPARAM lparam);
 	afx_msg void OnRightClickListDevice(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnCommandDeviceActivate();
 	afx_msg void OnCommandDeviceDeactivate();

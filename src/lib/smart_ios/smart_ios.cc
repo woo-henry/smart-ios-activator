@@ -34,7 +34,7 @@ int InitiOSDeviceEnviroment(void* context, iOSDeviceCallbacks* callbacks)
             break;
         }
 
-        result = ios_device_control->Init("license.dat", "SmartiOSActivator");
+        result = ios_device_control->Init("license.dat", "SmartiOSActivatorApp");
 
     } while (false);
 

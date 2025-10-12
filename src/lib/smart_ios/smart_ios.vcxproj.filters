@@ -26,6 +26,9 @@
     <ClCompile Include="device\ios_device_activator.cc">
       <Filter>device</Filter>
     </ClCompile>
+    <ClCompile Include="device\ios_device_license.cc">
+      <Filter>device</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\inc\smart_ios.h" />
@@ -54,6 +57,9 @@
       <Filter>device</Filter>
     </ClInclude>
     <ClInclude Include="device\ios_device_activator.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="device\ios_device_license.h">
       <Filter>device</Filter>
     </ClInclude>
   </ItemGroup>

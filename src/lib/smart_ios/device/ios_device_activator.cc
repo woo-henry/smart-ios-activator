@@ -62,11 +62,19 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
         {
             char* state_string = nullptr;
             result = GetActivationState(lockdown, &state_string);
-            if (state_string && lstrcmpA(state_string, "Unactivated") != 0)
+            if (state_string)
             {
-                mi_free(state_string);
-                state_string = nullptr;
-                break;
+                if (lstrcmpA(state_string, "Unactivated") != 0)
+                {
+                    mi_free(state_string);
+                    state_string = nullptr;
+                    break;
+                }
+                else
+                {
+                    mi_free(state_string);
+                    state_string = nullptr;
+                }
             }
         }
 
@@ -487,6 +495,59 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
     }
 
 	return result;
+}
+
+int iOSDeviceActivator::ActivateDeviceEx(const char* device_id, bool skip_install_setup)
+{
+    int result = IOS_ERROR_SUCCESS;
+    char* application_name = nullptr;
+
+    do
+    {
+        application_name = (char*)SmartMemAlloc(MAX_PATH);
+        if (application_name == nullptr)
+        {
+            result = ERROR_NOT_ENOUGH_MEMORY;
+            break;
+        }
+
+        if (!SmartFsGetAppPathA(application_name, "activation.exe"))
+        {
+            result = ERROR_FILE_NOT_FOUND;
+            break;
+        }
+
+        std::string command_line;
+        command_line.append(application_name);
+        command_line.append("activate");
+        command_line.append(" ");
+        command_line.append(" -u ");
+        command_line.append(device_id);
+        if (skip_install_setup)
+        {
+            command_line.append(" -b");
+        }
+
+        PROCESS_INFORMATION pi = { 0 };
+        RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
+        result = SmartProcessManager::CreateUserProcessA(command_line.c_str(), &pi);
+        if (result != ERROR_SUCCESS)
+            break;
+
+        WaitForSingleObject(pi.hProcess, INFINITE);
+
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+
+    } while (false);
+
+    if (application_name)
+    {
+        SmartMemFree(application_name);
+        application_name = nullptr;
+    }
+
+    return result;
 }
 
 int iOSDeviceActivator::DeactivateDevice(const char* device_id)
