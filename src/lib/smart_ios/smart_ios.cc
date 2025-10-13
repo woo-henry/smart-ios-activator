@@ -27,6 +27,11 @@ int InitiOSDeviceEnviroment(void* context, iOSDeviceCallbacks* callbacks)
 
     do
     {
+        WSADATA wsa_data;
+        result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+        if (result != IOS_ERROR_SUCCESS)
+            break;
+
         ios_device_control = new iOSDeviceControl(context, callbacks);
         if (ios_device_control == nullptr)
         {
@@ -47,6 +52,8 @@ int IOS_API ShutdowniOSDeviceEnviroment()
 
     do
     {
+        WSACleanup();
+
         if (ios_device_control == nullptr)
         {
             result = IOS_ERROR_OBJECT_IS_EMPTY;

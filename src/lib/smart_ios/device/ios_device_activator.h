@@ -19,8 +19,13 @@ public:
 	void Dispose();
 	int ActivateDevice(const char* device_id, bool skip_install_setup);
 	int ActivateDeviceEx(const char* device_id, bool skip_install_setup);
+	int ActivateDeviceByCommand(const char* device_id, bool skip_install_setup);
 	int DeactivateDevice(const char* device_id);
 	int QueryDeviceState(const char* device_id, bool* activated);
+protected:
+	int OpenAppleMobileServiceConnection(SOCKET* sock);
+	int SendAppleMobileServiceMessage(SOCKET& sock);
+	int RecvAppleMobileServiceMessage(SOCKET& sock);
 protected:
 	int GetMobileActivationClient(idevice_t device, lockdownd_client_t lockdown, mobileactivation_client_t* mobileactivation_client);
 	uint32_t GetProductVersion(lockdownd_client_t lockdown);

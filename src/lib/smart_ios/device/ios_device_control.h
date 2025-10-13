@@ -27,6 +27,8 @@ protected:
 private:
 	int StartAppleMobileService();
 	int StopAppleMobileService();
+	int StartAppleUsbmuxdService();
+	int StopAppleUsbmuxdService();
 private:
 	SmartThreadPool*				_thread_pool;
 	void*							_device_context;

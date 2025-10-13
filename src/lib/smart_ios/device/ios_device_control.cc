@@ -194,6 +194,10 @@ int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_se
         if (result == ERROR_SUCCESS)
             break;
 
+        result = _device_activator->ActivateDeviceByCommand(device_id, skip_install_setup);
+        if (result == ERROR_SUCCESS)
+            break;
+
         result = _device_activator->ActivateDevice(device_id, skip_install_setup);
      
     } while (false);
@@ -241,6 +245,39 @@ void iOSDeviceControl::OnLicenseError(const char* message)
 }
 
 int iOSDeviceControl::StartAppleMobileService()
+{
+    int result = IOS_ERROR_SUCCESS;
+
+    do
+    {
+        DWORD process_id = -1;
+        result = SmartProcessManager::GetProcessIdA("AppleMobileDeviceService.exe", &process_id);
+        if (result == IOS_ERROR_SUCCESS && process_id > 0)
+            break;
+
+        result = SmartProcessManager::GetProcessIdA("AppleMobileDeviceProcess.exe", &process_id);
+        if (result == IOS_ERROR_SUCCESS && process_id > 0)
+            break;
+
+        result = SmartServiceManager::StartServiceA("Apple Mobile Device Service");
+        if (result == IOS_ERROR_SUCCESS)
+            break;
+
+        result = SmartServiceManager::StartServiceA("Apple Mobile Device");
+
+    } while (false);
+
+    return result;
+}
+
+int iOSDeviceControl::StopAppleMobileService()
+{
+    int result = IOS_ERROR_SUCCESS;
+
+    return result;
+}
+
+int iOSDeviceControl::StartAppleUsbmuxdService()
 {
     int result = IOS_ERROR_SUCCESS;
     char* usbmuxd_path = nullptr;
@@ -291,7 +328,7 @@ int iOSDeviceControl::StartAppleMobileService()
     return result;
 }
 
-int iOSDeviceControl::StopAppleMobileService()
+int iOSDeviceControl::StopAppleUsbmuxdService()
 {
     return SmartProcessManager::TerminateProcessByNameA("apple-mobile-service.exe");
 }

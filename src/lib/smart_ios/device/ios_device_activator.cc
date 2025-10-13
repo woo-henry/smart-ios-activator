@@ -500,6 +500,38 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
 int iOSDeviceActivator::ActivateDeviceEx(const char* device_id, bool skip_install_setup)
 {
     int result = IOS_ERROR_SUCCESS;
+    SOCKET sock = INVALID_SOCKET;
+
+    do
+    {
+        result = OpenAppleMobileServiceConnection(&sock);
+        if (result != IOS_ERROR_SUCCESS)
+            break;
+
+        while (true)
+        {
+            result = SendAppleMobileServiceMessage(sock);
+            if (result != IOS_ERROR_SUCCESS)
+                break;
+
+            result = RecvAppleMobileServiceMessage(sock);
+            if (result != IOS_ERROR_SUCCESS)
+                break;
+        }
+    } while (false);
+
+    if (sock != INVALID_SOCKET)
+    {
+        closesocket(sock);
+        sock = INVALID_SOCKET;
+    }
+
+    return result;
+}
+
+int iOSDeviceActivator::ActivateDeviceByCommand(const char* device_id, bool skip_install_setup)
+{
+    int result = IOS_ERROR_SUCCESS;
     char* application_name = nullptr;
 
     do
@@ -519,6 +551,7 @@ int iOSDeviceActivator::ActivateDeviceEx(const char* device_id, bool skip_instal
 
         std::string command_line;
         command_line.append(application_name);
+        command_line.append(" ");
         command_line.append("activate");
         command_line.append(" ");
         command_line.append(" -u ");
@@ -679,6 +712,167 @@ int iOSDeviceActivator::QueryDeviceState(const char* device_id, bool* activated)
         device = nullptr;
     }
 
+    return result;
+}
+
+int iOSDeviceActivator::OpenAppleMobileServiceConnection(SOCKET* sock)
+{
+    int result = ERROR_SUCCESS;
+    SOCKET s = INVALID_SOCKET;
+
+    do
+    {
+        s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        if (s != INVALID_SOCKET)
+        {
+            result = WSAGetLastError();
+            break;
+        }
+
+        BOOL reuseaddr = TRUE;
+        result = setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseaddr, sizeof(reuseaddr));
+        if (result == SOCKET_ERROR)
+        {
+            result = WSAGetLastError();
+            break;
+        }
+
+        sockaddr_in service;
+        service.sin_family = AF_INET;
+        service.sin_addr.s_addr = inet_addr("127.0.0.1");
+        service.sin_port = htons(27015);
+
+        result = connect(s, (const sockaddr*)&service, sizeof(service));
+        if (result == SOCKET_ERROR)
+        {
+            result = WSAGetLastError();
+            break;
+        }
+
+        if (sock)
+        {
+            *sock = s;
+        }
+
+    } while (false);
+
+    if (result != ERROR_SUCCESS)
+    {
+        if (s != INVALID_SOCKET)
+        {
+            closesocket(s);
+            s = INVALID_SOCKET;
+        }
+    }
+
+    return result;
+}
+
+int iOSDeviceActivator::SendAppleMobileServiceMessage(SOCKET& sock)
+{
+    int result = ERROR_SUCCESS;
+    char* buffer = nullptr;
+    plist_t dict = nullptr;
+
+    do
+    {
+        dict = plist_new_dict();
+        if (dict == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+
+        plist_t bundle_id = plist_new_string("com.apple.iTunes");
+        if (bundle_id == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+        plist_dict_set_item(dict, "BundleID", bundle_id);
+
+        plist_t usbmuxd = plist_new_string("usbmuxd-???");
+        if (usbmuxd == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+        plist_dict_set_item(dict, "ClientVersionString", usbmuxd);
+
+        plist_t conn_type = plist_new_uint(1);
+        if (conn_type == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+        plist_dict_set_item(dict, "ConnType", conn_type);
+
+        plist_t listen = plist_new_string("Listen");
+        if (listen == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+        plist_dict_set_item(dict, "MessageType", listen);
+
+        plist_t usbmux_version = plist_new_uint(3);
+        if (usbmux_version == nullptr)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+        plist_dict_set_item(dict, "kLibUSBMuxVersion", usbmux_version);
+
+     
+        uint32_t len = 0;
+        plist_to_xml(dict, &buffer, &len);
+        if (buffer == nullptr || len == 0)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+
+        char buf[16] = { 0 };
+
+        DWORD v = 16;
+        memcpy(buf, &v, sizeof(v));
+
+        v = len + 16;
+        memcpy(buf + sizeof(v), &v, sizeof(v));
+        int ret = send(sock, buf, 16, 0);
+        if (ret != 16)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+
+        ret = send(sock, buffer, len, 0);
+        if (ret != v)
+        {
+            result = ERROR_DATA_NOT_ACCEPTED;
+            break;
+        }
+
+    } while (false);
+
+    if (dict)
+    {
+        plist_free(dict);
+        dict = nullptr;
+    }
+
+    if (buffer)
+    {
+        mi_free(buffer);
+        buffer = nullptr;
+    }
+
+    return result;
+}
+
+int iOSDeviceActivator::RecvAppleMobileServiceMessage(SOCKET& sock)
+{
+    int result = ERROR_SUCCESS;
     return result;
 }
 
