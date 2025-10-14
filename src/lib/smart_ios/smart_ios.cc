@@ -87,7 +87,7 @@ int IOS_API QueryiOSDevice(const char* device_id)
     return result;
 }
 
-int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup)
+int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup, const char* wifi_ssid, const char* wifi_password)
 {
     int result = IOS_ERROR_SUCCESS;
 
@@ -99,7 +99,7 @@ int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup)
             break;
         }
 
-        result = ios_device_control->ActivateDevice(device_id, skip_install_setup);
+        result = ios_device_control->ActivateDevice(device_id, skip_install_setup, wifi_ssid, wifi_password);
 
     } while (false);
 
@@ -125,7 +125,7 @@ int IOS_API DeactivateiOSDevice(const char* device_id)
     return result;
 }
 
-int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated)
+int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated, bool* setup_done)
 {
     int result = IOS_ERROR_SUCCESS;
 
@@ -137,7 +137,7 @@ int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated)
             break;
         }
 
-        result = ios_device_control->QueryDeviceState(device_id, activated);
+        result = ios_device_control->QueryDeviceState(device_id, activated, setup_done);
 
     } while (false);
 

@@ -31,9 +31,9 @@ typedef struct tagiOSDeviceCallbacks
 int IOS_API InitiOSDeviceEnviroment(void* context, iOSDeviceCallbacks* callbacks);
 int IOS_API ShutdowniOSDeviceEnviroment();
 int IOS_API QueryiOSDevice(const char* device_id);
-int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup = true);
+int IOS_API ActivateiOSDevice(const char* device_id, bool skip_install_setup = true, const char* wifi_ssid = nullptr, const char* wifi_password = nullptr);
 int IOS_API DeactivateiOSDevice(const char* device_id);
-int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated);
+int IOS_API QueryiOSDeviceState(const char* device_id, bool* activated, bool* setup_done);
 
 #ifdef __cplusplus
 };

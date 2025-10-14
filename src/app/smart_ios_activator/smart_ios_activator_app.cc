@@ -41,7 +41,7 @@ BOOL SmartiOSActivatorApp::InitInstance()
 			break;
 
 		SmartLogInfo("--------------------------------------------------------------");
-		SmartLogInfo("iOS Device Mirror Application Start");
+		SmartLogInfo("iOS Device Activator Application Start");
 		SmartLogInfo("--------------------------------------------------------------");
 
 		if (!CWinApp::InitInstance())

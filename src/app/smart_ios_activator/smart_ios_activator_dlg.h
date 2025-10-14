@@ -28,6 +28,7 @@ protected:
 	afx_msg void OnCommandDeviceActivate();
 	afx_msg void OnCommandDeviceDeactivate();
 	afx_msg void OnCommandDeviceActivateAll();
+	afx_msg void OnBnClickedAutoWifi();
 	DECLARE_MESSAGE_MAP()
 private:
 	void InitListCtrl();
@@ -40,7 +41,8 @@ private:
 		const CString& product_type, 
 		const CString& product_version, 
 		const CString& phone_number,
-		const bool activated);
+		const bool activated,
+		const bool setup_done);
 protected:
 	static void OniOSDeviceConnected(void* context, const char* device_id);
 	static void OniOSDeviceDisconnected(void* context, const char* device_id);
@@ -61,4 +63,7 @@ protected:
 	CListCtrl									_device_listctrl;
 	HDEVNOTIFY									_device_notify;
 	iOSDeviceCallbacks							_device_callbacks;
+	CButton										_btn_auto_wifi;
+	CEdit										_edit_wifi_ssid;
+	CEdit										_edit_wifi_password;
 };

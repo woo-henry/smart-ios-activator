@@ -107,7 +107,7 @@ int iOSDeviceCommandInfo::GetDeviceInfo(const char* device_id, std::map<std::str
             break;
 
         result = GetDeviceInfoInternal(node, device_info);
-   
+
     } while (false);
 
     if (client)

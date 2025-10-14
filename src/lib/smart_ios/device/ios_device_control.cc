@@ -72,8 +72,6 @@ int iOSDeviceControl::Init(const char* license_file, const char* license_passwor
 
     do
     {
-        StopAppleMobileService();
-
         _thread_pool = SmartThreadPoolFactory::CreateThreadPool();
         if (_thread_pool == nullptr)
         {
@@ -176,7 +174,7 @@ int iOSDeviceControl::QueryDevice(const char* device_id)
     return result;
 }
 
-int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_setup)
+int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_setup, const char* wifi_ssid, const char* wifi_password)
 {
     int result = IOS_ERROR_SUCCESS;
 
@@ -190,15 +188,13 @@ int iOSDeviceControl::ActivateDevice(const char* device_id, bool skip_install_se
             break;
         }
 
-        result = _device_activator->ActivateDeviceEx(device_id, skip_install_setup);
-        if (result == ERROR_SUCCESS)
+        result = StartAppleMobileService();
+        if (result != IOS_ERROR_SUCCESS)
             break;
 
-        result = _device_activator->ActivateDeviceByCommand(device_id, skip_install_setup);
+        result = _device_activator->ActivateDevice(device_id, skip_install_setup, wifi_ssid, wifi_password);
         if (result == ERROR_SUCCESS)
             break;
-
-        result = _device_activator->ActivateDevice(device_id, skip_install_setup);
      
     } while (false);
 
@@ -219,6 +215,10 @@ int iOSDeviceControl::DeactivateDevice(const char* device_id)
             break;
         }
 
+        result = StartAppleMobileService();
+        if (result != IOS_ERROR_SUCCESS)
+            break;
+
         result = _device_activator->DeactivateDevice(device_id);
 
     } while (false);
@@ -226,13 +226,13 @@ int iOSDeviceControl::DeactivateDevice(const char* device_id)
     return result;
 }
 
-int iOSDeviceControl::QueryDeviceState(const char* device_id, bool* activated)
+int iOSDeviceControl::QueryDeviceState(const char* device_id, bool* activated, bool* setup_done)
 {
     int result = IOS_ERROR_SUCCESS;
 
     do
     {
-        result = _device_activator->QueryDeviceState(device_id, activated);
+        result = _device_activator->QueryDeviceState(device_id, activated, setup_done);
 
     } while (false);
 
@@ -275,60 +275,4 @@ int iOSDeviceControl::StopAppleMobileService()
     int result = IOS_ERROR_SUCCESS;
 
     return result;
-}
-
-int iOSDeviceControl::StartAppleUsbmuxdService()
-{
-    int result = IOS_ERROR_SUCCESS;
-    char* usbmuxd_path = nullptr;
-
-    do
-    {
-        if (SmartProcessManager::IsProcessRunningA("apple-mobile-service.exe"))
-            break;
-
-        usbmuxd_path = (char*)SmartMemAlloc(MAX_PATH * sizeof(char));
-        if (usbmuxd_path == nullptr)
-        {
-            result = ERROR_NOT_ENOUGH_MEMORY;
-            break;
-        }
-
-        if (!SmartFsGetAppPathA(usbmuxd_path, "tools\\apple-mobile-service.exe"))
-        {
-            result = ERROR_FILE_NOT_FOUND;
-            break;
-        }
-
-        STARTUPINFOA si = { 0 };
-        RtlZeroMemory(&si, sizeof(STARTUPINFO));
-        si.cb = sizeof(STARTUPINFO);
-        si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
-        si.wShowWindow = SW_HIDE;
-
-        PROCESS_INFORMATION pi = { 0 };
-        RtlZeroMemory(&pi, sizeof(PROCESS_INFORMATION));
-        if (!CreateProcessA(nullptr, usbmuxd_path, nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &pi))
-        {
-            result = GetLastError();
-            break;
-        }
-
-        CloseHandle(pi.hThread);
-        CloseHandle(pi.hProcess);
-
-    } while (false);
-
-    if (usbmuxd_path)
-    {
-        SmartMemFree(usbmuxd_path);
-        usbmuxd_path = nullptr;
-    }
-
-    return result;
-}
-
-int iOSDeviceControl::StopAppleUsbmuxdService()
-{
-    return SmartProcessManager::TerminateProcessByNameA("apple-mobile-service.exe");
 }

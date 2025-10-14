@@ -19,16 +19,14 @@ public:
 	int Init(const char* license_file, const char* license_password);
 	void Dispose();
 	int QueryDevice(const char* device_id);
-	int ActivateDevice(const char* device_id, bool skip_install_setup);
+	int ActivateDevice(const char* device_id, bool skip_install_setup, const char* wifi_ssid, const char* wifi_password);
 	int DeactivateDevice(const char* device_id);
-	int QueryDeviceState(const char* device_id, bool* activated);
+	int QueryDeviceState(const char* device_id, bool* activated, bool* setup_done);
 protected:
 	virtual void OnLicenseError(const char* message) override;
 private:
 	int StartAppleMobileService();
 	int StopAppleMobileService();
-	int StartAppleUsbmuxdService();
-	int StopAppleUsbmuxdService();
 private:
 	SmartThreadPool*				_thread_pool;
 	void*							_device_context;

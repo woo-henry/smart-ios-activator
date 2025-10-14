@@ -26,6 +26,7 @@ typedef double									float64;
 #endif // SMART_IOS_API
 
 //////////////////////////////////////////////////////////////////////////
+#define WIN32_LEAN_AND_MEAN
 #include <wtypes.h>
 #include <string>
 #include <vector>

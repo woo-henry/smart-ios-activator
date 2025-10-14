@@ -30,6 +30,7 @@ typedef struct tagIosDevice
 	char	product_version[MAX_PATH];
 	char	phone_number[MAX_PATH];
 	bool	activated;
+	bool	setup_done;
 } IosDevice;
 
 #endif //PCH_H

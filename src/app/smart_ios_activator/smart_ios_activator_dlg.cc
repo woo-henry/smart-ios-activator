@@ -2,6 +2,14 @@
 #include "smart_ios_activator_app.h"
 #include "smart_ios_activator_dlg.h"
 
+typedef struct tagDeviceActivateContext
+{
+	char device_id[MAX_PATH];
+	char wifi_ssid[64];
+	char wifi_password[64];
+	int	 list_index;
+} DeviceActivateContext;
+
 BEGIN_MESSAGE_MAP(SmartiOSActivatorDlg, CDialogEx)
 	ON_WM_CLOSE()
 	ON_WM_PAINT()
@@ -16,6 +24,7 @@ BEGIN_MESSAGE_MAP(SmartiOSActivatorDlg, CDialogEx)
 	ON_COMMAND(IDC_ACTIVATE, &SmartiOSActivatorDlg::OnCommandDeviceActivate)
 	ON_COMMAND(IDC_DEACTIVATE, &SmartiOSActivatorDlg::OnCommandDeviceDeactivate)
 	ON_BN_CLICKED(IDC_ACTIVATE_ALL, &SmartiOSActivatorDlg::OnCommandDeviceActivateAll)
+	ON_BN_CLICKED(IDC_AUTO_WIFI, &SmartiOSActivatorDlg::OnBnClickedAutoWifi)
 END_MESSAGE_MAP()
 
 SmartiOSActivatorDlg::SmartiOSActivatorDlg(CWnd* pParent)
@@ -51,6 +60,8 @@ BOOL SmartiOSActivatorDlg::OnInitDialog()
 		return FALSE;
 	}
 
+	OnBnClickedAutoWifi();
+
 	return TRUE;
 }
 
@@ -58,6 +69,9 @@ void SmartiOSActivatorDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_DEVICE, _device_listctrl);
+	DDX_Control(pDX, IDC_AUTO_WIFI, _btn_auto_wifi);
+	DDX_Control(pDX, IDC_WIFI_SSID, _edit_wifi_ssid);
+	DDX_Control(pDX, IDC_WIFI_PASSWORD, _edit_wifi_password);
 }
 
 void SmartiOSActivatorDlg::OnClose()
@@ -288,11 +302,12 @@ LRESULT SmartiOSActivatorDlg::OnMessageDeviceObjectUpdate(WPARAM wparam, LPARAM 
 #endif // UNICODE
 
 		const bool activated = device->activated;
+		const bool setup_done = device->setup_done;
 
 #ifdef UNICODE
-		UpdateListItem(device_id_w, device_name_w, serial_number_w, product_name_w, product_type_w, product_version_w, phone_number_w, activated);
+		UpdateListItem(device_id_w, device_name_w, serial_number_w, product_name_w, product_type_w, product_version_w, phone_number_w, activated, setup_done);
 #else
-		UpdateListItem(device_id.c_str(), device_name.c_str(), serial_number.c_str(), product_name.c_str(), product_type.c_str(), product_version.c_str(), phone_number.c_str(), activated);
+		UpdateListItem(device_id.c_str(), device_name.c_str(), serial_number.c_str(), product_name.c_str(), product_type.c_str(), product_version.c_str(), phone_number.c_str(), activated, setup_done);
 #endif // UNICODE
 
 	} while (false);
@@ -362,24 +377,26 @@ LRESULT SmartiOSActivatorDlg::OnMessageDeviceStatusUpdate(WPARAM wparam, LPARAM 
 LRESULT SmartiOSActivatorDlg::OnMessageDeviceMessageSuccess(WPARAM wparam, LPARAM lparam)
 {
 	LRESULT result = ERROR_SUCCESS;
-	char* device_id = nullptr;
+	DeviceActivateContext* context = nullptr;
 
 	do
 	{
-		device_id = (char*)wparam;
-		if (device_id == nullptr)
+		context = (DeviceActivateContext*)wparam;
+		if (context == nullptr)
 			break;
 
+		_device_listctrl.SetItemText(context->list_index, 7, TEXT("已激活"));
+
 		CStringA message;
-		message.Format("设备[%s]激活成功\r\n请断开连接，并在屏幕上点击继续，以便设备完成自动激活过程！", device_id);
+		message.Format("设备[%s]激活成功！", context->device_id);
 		MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONINFORMATION);
 
 	} while (false);
 
-	if (device_id)
+	if (context)
 	{
-		SmartMemFree(device_id);
-		device_id = nullptr;
+		SmartMemFree(context);
+		context = nullptr;
 	}
 
 	return result;
@@ -388,32 +405,26 @@ LRESULT SmartiOSActivatorDlg::OnMessageDeviceMessageSuccess(WPARAM wparam, LPARA
 LRESULT SmartiOSActivatorDlg::OnMessageDeviceMessageError(WPARAM wparam, LPARAM lparam)
 {
 	LRESULT result = ERROR_SUCCESS;
-	char* device_id = nullptr;
+	DeviceActivateContext* context = nullptr;
 
 	do
 	{
-		device_id = (char*)wparam;
-		if (device_id == nullptr)
+		context = (DeviceActivateContext*)wparam;
+		if (context == nullptr)
 			break;
 
-		if (lparam == -2)
-		{
-			CStringA message;
-			message.Format("设备[%s]激活成功\r\n请断开连接，并在屏幕上点击继续，以便设备完成自动激活过程！", device_id);
-			MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONINFORMATION);
-		}
-		else
-		{
-			CStringA message;
-			message.Format("设备[%s]激活失败\r\n错误代码：%d", device_id, (int)lparam);
-			MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONERROR);
-		}
+		_device_listctrl.SetItemText(context->list_index, 7, TEXT("未激活"));
+
+		CStringA message;
+		message.Format("设备[%s]激活失败\r\n错误代码：%d", context->device_id, (int)lparam);
+		MessageBoxA(GetSafeHwnd(), message, "设备激活", MB_ICONERROR);
+		
 	} while (false);
 
-	if (device_id)
+	if (context)
 	{
-		SmartMemFree(device_id);
-		device_id = nullptr;
+		SmartMemFree(context);
+		context = nullptr;
 	}
 
 	return result;
@@ -459,27 +470,34 @@ void SmartiOSActivatorDlg::OnCommandDeviceActivate()
 	if (device_id.IsEmpty())
 		return;
 
-	char* device_id_a = (char*)SmartMemAlloc(MAX_PATH);
-	if (device_id_a == nullptr)
+	DeviceActivateContext* context = (DeviceActivateContext*)SmartMemAlloc(sizeof(DeviceActivateContext));
+	if (context == nullptr)
 		return;
 
+	GetDlgItemTextA(GetSafeHwnd(), IDC_WIFI_SSID, context->wifi_ssid, sizeof(context->wifi_ssid));
+	GetDlgItemTextA(GetSafeHwnd(), IDC_WIFI_PASSWORD, context->wifi_password, sizeof(context->wifi_password));
+
+	context->list_index = index;
+
 	int device_id_length = 0;
-	if (SmartStrW2A(device_id_a, &device_id_length, device_id.GetString()))
+	if (SmartStrW2A(context->device_id, &device_id_length, device_id.GetString()))
 	{
 		DWORD thread_id = 0;
-		HANDLE thread_handle = CreateThread(nullptr, 0, ActivateDeviceThreadRoutine, device_id_a, 0, &thread_id);
+		HANDLE thread_handle = CreateThread(nullptr, 0, ActivateDeviceThreadRoutine, context, 0, &thread_id);
 		if (thread_handle)
 		{
 			CloseHandle(thread_handle);
 			thread_handle = nullptr;
 		}
+
+		_device_listctrl.SetItemText(context->list_index, 7, TEXT("激活中"));
 	}
 	else
 	{
-		if (device_id_a)
+		if (context)
 		{
-			SmartMemFree(device_id_a);
-			device_id_a = nullptr;
+			SmartMemFree(context);
+			context = nullptr;
 		}
 	}
 }
@@ -514,6 +532,7 @@ void SmartiOSActivatorDlg::OnCommandDeviceDeactivate()
 		{
 			AfxMessageBox(TEXT("设备反激活成功！"));
 			_device_listctrl.SetItemText(index, 7, TEXT("未激活"));
+			_device_listctrl.SetItemText(index, 8, TEXT("未完成设置"));
 		}
 	}
 
@@ -530,32 +549,31 @@ void SmartiOSActivatorDlg::OnCommandDeviceActivateAll()
 	if (item_count == 0)
 		return;
 
-	std::vector<std::string>* device_ids = new std::vector<std::string>;
+	std::vector<DeviceActivateContext*>* contexts = new std::vector<DeviceActivateContext*>;
 	for (int i = 0; i < item_count; i++)
 	{
 		CString device_id = _device_listctrl.GetItemText(i, 0);
 		if (device_id.IsEmpty())
 			continue;
 
-		char* device_id_a = (char*)SmartMemAlloc(MAX_PATH);
-		if (device_id_a == nullptr)
+		DeviceActivateContext* context = (DeviceActivateContext*)SmartMemAlloc(sizeof(DeviceActivateContext));
+		if (context == nullptr)
 			continue;
 
+		GetDlgItemTextA(GetSafeHwnd(), IDC_WIFI_SSID, context->wifi_ssid, sizeof(context->wifi_ssid));
+		GetDlgItemTextA(GetSafeHwnd(), IDC_WIFI_PASSWORD, context->wifi_password, sizeof(context->wifi_password));
+
 		int device_id_length = 0;
-		if (SmartStrW2A(device_id_a, &device_id_length, device_id.GetString()))
+		if (SmartStrW2A(context->device_id, &device_id_length, device_id.GetString()))
 		{
-			device_ids->push_back(device_id_a);
+			contexts->push_back(context);
 		}
 
-		if (device_id_a)
-		{
-			SmartMemFree(device_id_a);
-			device_id_a = nullptr;
-		}
+		_device_listctrl.SetItemText(i, 7, TEXT("激活中"));
 	}
 
 	DWORD thread_id = 0;
-	HANDLE thread_handle = CreateThread(nullptr, 0, ActivateAllDeviceThreadRoutine, device_ids, 0, &thread_id);
+	HANDLE thread_handle = CreateThread(nullptr, 0, ActivateAllDeviceThreadRoutine, contexts, 0, &thread_id);
 	if (thread_handle)
 	{
 		CloseHandle(thread_handle);
@@ -563,8 +581,41 @@ void SmartiOSActivatorDlg::OnCommandDeviceActivateAll()
 	}
 	else
 	{
-		delete device_ids;
-		device_ids = nullptr;
+		if (contexts)
+		{
+			for (auto it = contexts->begin(); it != contexts->end(); it++)
+			{
+				DeviceActivateContext* context = *it;
+				if (context)
+				{
+					SmartMemFree(context);
+					context = nullptr;
+				}
+			}
+			delete contexts;
+			contexts = nullptr;
+		}
+	}
+}
+
+void SmartiOSActivatorDlg::OnBnClickedAutoWifi()
+{
+	int check = _btn_auto_wifi.GetCheck();
+	if (check == BST_CHECKED)
+	{
+		_edit_wifi_ssid.SetSel(0);
+		_edit_wifi_ssid.EnableWindow(TRUE);
+		_edit_wifi_password.EnableWindow(TRUE);
+	}
+	else
+	{
+		_edit_wifi_ssid.SetSel(0, -1);
+		_edit_wifi_ssid.ReplaceSel(TEXT(""));
+		_edit_wifi_ssid.EnableWindow(FALSE);
+
+		_edit_wifi_password.SetSel(0, -1);
+		_edit_wifi_password.ReplaceSel(TEXT(""));
+		_edit_wifi_password.EnableWindow(FALSE);
 	}
 }
 
@@ -580,6 +631,7 @@ void SmartiOSActivatorDlg::InitListCtrl()
 	_device_listctrl.InsertColumn(5, TEXT("系统版本"), 0, 100);
 	_device_listctrl.InsertColumn(6, TEXT("电话号码"), 0, 150);
 	_device_listctrl.InsertColumn(7, TEXT("激活状态"), 0, 100);
+	_device_listctrl.InsertColumn(8, TEXT("设置状态"), 0, 100);
 }
 
 void SmartiOSActivatorDlg::InsertListItem(const CString& device_id)
@@ -612,7 +664,7 @@ void SmartiOSActivatorDlg::DeleteListItem(const CString& device_id)
 
 void SmartiOSActivatorDlg::UpdateListItem(const CString& device_id, const CString& device_name, const CString& serial_number,
 	const CString& product_name, const CString& product_type, const CString& product_version, const CString& phone_number,
-	const bool activated)
+	const bool activated, const bool setup_done)
 {
 	_device_listctrl.SetRedraw(FALSE);
 	{
@@ -629,6 +681,7 @@ void SmartiOSActivatorDlg::UpdateListItem(const CString& device_id, const CStrin
 				_device_listctrl.SetItemText(position, 5, product_version.GetString());
 				_device_listctrl.SetItemText(position, 6, phone_number.GetString());
 				_device_listctrl.SetItemText(position, 7, activated ? TEXT("已激活") : TEXT("未激活"));
+				_device_listctrl.SetItemText(position, 8, setup_done ? TEXT("完成设置") : TEXT("未完成设置"));
 				break;
 			}
 		}
@@ -649,6 +702,8 @@ void SmartiOSActivatorDlg::OniOSDeviceConnected(void* context, const char* devic
 	RtlZeroMemory(ios_device, sizeof(IosDevice));
 	lstrcpyA(ios_device->device_id, device_id);
 
+	SmartLogDebug("connect device = %s", device_id);
+
 	::PostMessage(dlg->GetSafeHwnd(), WM_IOS_DEVICE_OBJECT_ADD, (WPARAM)ios_device, (LPARAM)context);
 }
 
@@ -665,6 +720,8 @@ void SmartiOSActivatorDlg::OniOSDeviceDisconnected(void* context, const char* de
 	RtlZeroMemory(ios_device, sizeof(IosDevice));
 	lstrcpyA(ios_device->device_id, device_id);
 
+	SmartLogDebug("disconnect device = %s", device_id);
+
 	::PostMessage(dlg->GetSafeHwnd(), WM_IOS_DEVICE_OBJECT_REMOVE, (WPARAM)ios_device, (LPARAM)context);
 }
 
@@ -677,6 +734,8 @@ void SmartiOSActivatorDlg::OniOSDeviceQuery(void* context,
 	const char* product_version,
 	const char* phone_number)
 {
+	SmartLogDebug("query device = %s", device_id);
+
 	SmartiOSActivatorDlg* dlg = (SmartiOSActivatorDlg*)context;
 	if (dlg == nullptr)
 		return;
@@ -695,7 +754,7 @@ void SmartiOSActivatorDlg::OniOSDeviceQuery(void* context,
 	lstrcpyA(ios_device->phone_number, phone_number);
 
 	bool activated = false;
-	QueryiOSDeviceState(device_id, &ios_device->activated);
+	QueryiOSDeviceState(device_id, &ios_device->activated, &ios_device->setup_done);
 
 	::PostMessage(dlg->GetSafeHwnd(), WM_IOS_DEVICE_OBJECT_UPDATE, (WPARAM)ios_device, (LPARAM)context);
 }
@@ -712,27 +771,29 @@ void SmartiOSActivatorDlg::OniOSDeviceError(void* context, const char* device_id
 DWORD WINAPI SmartiOSActivatorDlg::ActivateDeviceThreadRoutine(PVOID parameter)
 {
 	int result = ERROR_SUCCESS;
-	char* device_id = nullptr;
+	DeviceActivateContext* context = nullptr;
 
 	do
 	{
-		device_id = (char*)parameter;
-		if (device_id == nullptr)
+		context = (DeviceActivateContext*)parameter;
+		if (context == nullptr)
 		{
 			result = ERROR_INVALID_PARAMETER;
 			break;
 		}
 
-		result = ActivateiOSDevice(device_id);
+		result = ActivateiOSDevice(context->device_id, true, context->wifi_ssid, context->wifi_password);
 		if (result != ERROR_SUCCESS)
 		{
-			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)device_id, (LPARAM)result);
-			SmartLogError("Activate iOS Device[%s] Error : %d", device_id, result);
+			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)context, (LPARAM)result);
 		}
 		else
 		{
-			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)device_id, (LPARAM)result);
+			this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)context, (LPARAM)result);
 		}
+
+		result = QueryiOSDevice(context->device_id);
+
 	} while (false);
 
 	return result;
@@ -741,42 +802,53 @@ DWORD WINAPI SmartiOSActivatorDlg::ActivateDeviceThreadRoutine(PVOID parameter)
 DWORD WINAPI SmartiOSActivatorDlg::ActivateAllDeviceThreadRoutine(PVOID parameter)
 {
 	int result = ERROR_SUCCESS;
-	std::vector<std::string>* device_ids = nullptr;
+	std::vector<DeviceActivateContext*>* contexts = nullptr;
 
 	do
 	{
-		device_ids = (std::vector<std::string>*)parameter;
-		if (device_ids == nullptr)
+		contexts = (std::vector<DeviceActivateContext*>*)parameter;
+		if (contexts == nullptr)
 		{
 			result = ERROR_INVALID_PARAMETER;
 			break;
 		}
 
-		for (std::vector<std::string>::const_iterator it = device_ids->begin(); it != device_ids->end(); it++)
+		for (auto it = contexts->begin(); it != contexts->end(); it++)
 		{
-			std::string device_id_string = *it;
-			char* device_id = (char*)SmartMemAlloc(device_id_string.length() + 1);
-			if (device_id)
+			DeviceActivateContext* context = *it;
+			if (context == nullptr)
+				continue;
+
+			result = ActivateiOSDevice(context->device_id, true, context->wifi_ssid, context->wifi_password);
+			if (result != ERROR_SUCCESS)
 			{
-				lstrcpyA(device_id, device_id_string.c_str());
-				result = ActivateiOSDevice(device_id);
-				if (result != ERROR_SUCCESS)
-				{
-					AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)device_id, (LPARAM)result);
-					SmartLogError("Activate iOS Device[%s] Error : %d", device_id, result);
-				}
-				else
-				{
-					AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)device_id);
-				}
+				AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)context, (LPARAM)result);
 			}
+			else
+			{
+				AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)context);
+			}
+
+			result = QueryiOSDevice(context->device_id);
 		}
 	} while (false);
 
-	if (device_ids)
+	if (result != ERROR_SUCCESS)
 	{
-		delete device_ids;
-		device_ids = nullptr;
+		if (contexts)
+		{
+			for (auto it = contexts->begin(); it != contexts->end(); it++)
+			{
+				DeviceActivateContext* context = *it;
+				if (context)
+				{
+					SmartMemFree(context);
+					context = nullptr;
+				}
+			}
+			delete contexts;
+			contexts = nullptr;
+		}
 	}
 
 	return result;
