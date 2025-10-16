@@ -96,14 +96,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4251;4267;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libcurld.lib;libssld.lib;libcryptod.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x86\$(TargetName).lib</ImportLibrary>
     </Link>
@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4251;4267;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -127,7 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libcurl.lib;libssl.lib;libcrypto.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x86\$(TargetName).lib</ImportLibrary>
     </Link>
@@ -140,14 +140,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4251;4267;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_based.lib;smart_advd.lib;libimobiledeviced.lib;libcurld.lib;libssld.lib;libcryptod.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x64\$(TargetName).lib</ImportLibrary>
       <HeapReserveSize>268435456</HeapReserveSize>
@@ -168,7 +168,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4251;4267;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <StringPooling>true</StringPooling>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -179,7 +179,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_base.lib;smart_adv.lib;libimobiledevice.lib;libcurl.lib;libssl.lib;libcrypto.lib;iconv.lib;lzma.lib;libxml2.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;wldap32.lib;normaliz.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib\x64\$(TargetName).lib</ImportLibrary>
       <HeapReserveSize>

@@ -1,6 +1,5 @@
 #include <smart_base.h>
 #include <smart_ios.h>
-#include <mimalloc-new-delete.h>
 #include <device/ios_device_control.h>
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
@@ -15,7 +14,7 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
     case DLL_PROCESS_DETACH:
         break;
     }
-
+    
     return TRUE;
 }
 //////////////////////////////////////////////////////////////////////////

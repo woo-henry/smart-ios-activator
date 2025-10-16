@@ -6,7 +6,7 @@
 #include <plist/plist.h>
 #include <libimobiledevice/service.h>
 #include <libimobiledevice/property_list_service.h>
-#include <mimalloc.h>
+
 #include <curl/curl.h>
 #include "device/ios_device_activator.h"
 #include <usbmuxd.h>
@@ -83,7 +83,12 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
         result = lockdownd_client_new_with_handshake(device, &client, "ideviceactivation");
         SmartLogDebug("ActivateDevice[%s] 22 = %d", device_id, result);
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
+        {
+            result = lockdownd_client_new(device, &client, "ideviceactivation");
+            SmartLogDebug("ActivateDevice[%s] 222 = %d", device_id, result);
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
 
         uint32_t product_version = GetProductVersion(client);
         if (product_version >= 0x0A0200) 
@@ -94,13 +99,13 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
             {
                 if (lstrcmpA(state_string, "Unactivated") != 0)
                 {
-                    mi_free(state_string);
+                    free(state_string);
                     state_string = nullptr;
                     break;
                 }
                 else
                 {
-                    mi_free(state_string);
+                    free(state_string);
                     state_string = nullptr;
                 }
             }
@@ -108,13 +113,8 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
 
         result = SyncTimeIntervalSince1970(device);
         SmartLogDebug("ActivateDevice[%s] 33 = %d", device_id, result);
-        if (result != ERROR_SUCCESS)
-            break;
-
-        //SmartLogDebug("socket_connect[%s] aaa = %d", device_id, result);
-        //int ret = socket_connect("127.0.0.1", 27015);
-        //SmartLogDebug("socket_connect[%s] zzz = %d", device_id, ret);
-
+        //if (result != ERROR_SUCCESS)
+        //    break;
 
         SmartLogDebug("ActivateDevice[%s] 333 = %d", device_id, result);
         bool use_mobileactivation = GetMobileActivationClient(device, client, &mobileactivation_client) == ERROR_SUCCESS;
@@ -293,8 +293,12 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
                 SmartLogDebug("ActivateDevice[%s] 120 = %d", device_id, result);
                 if (result != LOCKDOWN_E_SUCCESS)
                 {
-                    SmartLogError("Failed to connect to lockdownd");
-                    break;
+                    result = lockdownd_client_new(device, &client, "ideviceactivation");
+                    if (result != LOCKDOWN_E_SUCCESS)
+                    {
+                        SmartLogError("Failed to connect to lockdownd");
+                        break;
+                    }
                 }
 
                 if (use_mobileactivation) 
@@ -371,7 +375,7 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
                         if (state_string)
                         {
                             success = lstrcmpA(state_string, "Unactivated");
-                            mi_free(state_string);
+                            free(state_string);
                             state_string = nullptr;
                         }
        
@@ -479,7 +483,7 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
                                 if (field_placeholder) 
                                 {
                                     SmartLogInfo(" (%s)", field_placeholder);
-                                    mi_free(field_placeholder);
+                                    free(field_placeholder);
                                     field_placeholder = nullptr;
                                 }
                                 printf(": ");
@@ -498,7 +502,7 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
 
                             if (field_label) 
                             {
-                                mi_free(field_label);
+                                free(field_label);
                                 field_label = nullptr;
                             }
                         }
@@ -507,7 +511,7 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
 
                 if (iter)
                 {
-                    mi_free(iter);
+                    free(iter);
                     iter = nullptr;
                 }
                
@@ -554,13 +558,13 @@ int iOSDeviceActivator::ActivateDevice(const char* device_id, bool skip_install_
 
     if (field_label)
     {
-        mi_free(field_label);
+        free(field_label);
         field_label = nullptr;
     }
 
     if (iter)
     {
-        mi_free(iter);
+        free(iter);
         iter = nullptr;
     }
 
@@ -606,7 +610,11 @@ int iOSDeviceActivator::DeactivateDevice(const char* device_id)
 
         result = lockdownd_client_new_with_handshake(device, &client, "ideviceactivation");
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
+        {
+            result = lockdownd_client_new(device, &client, "ideviceactivation");
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
 
         result = GetMobileActivationClient(device, client, &mobileactivation_client);
         if (result == ERROR_SUCCESS)
@@ -671,7 +679,11 @@ int iOSDeviceActivator::QueryDeviceState(const char* device_id, bool* activated,
 
         result = lockdownd_client_new_with_handshake(device, &client, "ideviceactivationstate");
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
+        {
+            result = lockdownd_client_new(device, &client, "ideviceactivationstate");
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
 
         result = GetMobileActivationClient(device, client, &mobileactivation_client);
         if (result == ERROR_SUCCESS)
@@ -723,7 +735,7 @@ int iOSDeviceActivator::QueryDeviceState(const char* device_id, bool* activated,
 
     if (activation_state_string)
     {
-        mi_free(activation_state_string);
+        free(activation_state_string);
         activation_state_string = nullptr;
     }
 
@@ -762,8 +774,11 @@ int iOSDeviceActivator::SetupDoneDevice(idevice_t device, const char* wifi_ssid,
         result = lockdownd_client_new_with_handshake(device, &client, "ss");
         SmartLogDebug("SetupDoneDevice112 = %d", result);
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
-
+        {
+            result = lockdownd_client_new(device, &client, "ss");
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
 
         result = lockdownd_start_service(client, "com.apple.mobile.MCInstall", &service);
         SmartLogDebug("SetupDoneDevice113 = %d", result);
@@ -794,7 +809,11 @@ int iOSDeviceActivator::SetupDoneDevice(idevice_t device, const char* wifi_ssid,
         result = lockdownd_client_new_with_handshake(device, &client, "sd");
         SmartLogDebug("SetupDoneDevice115 = %d", result);
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
+        {
+            result = lockdownd_client_new(device, &client, "sd");
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
         
         result = SetupLanguage(client, true);
         SmartLogDebug("SetupDoneDevice116 = %d", result);
@@ -923,6 +942,64 @@ int iOSDeviceActivator::SetupDoneDevice(idevice_t device, const char* wifi_ssid,
     return result;
 }
 
+int iOSDeviceActivator::ValidateDevice(const char* device_id)
+{
+    int result = IOS_ERROR_SUCCESS;
+    idevice_t device = nullptr;
+    lockdownd_client_t client = nullptr;
+    char* type = nullptr;
+
+    do
+    {
+        result = idevice_new(&device, device_id);
+        if (result != IOS_ERROR_SUCCESS)
+            break;
+
+        result = lockdownd_client_new(device, &client, "vd");
+        if (result != LOCKDOWN_E_SUCCESS)
+            break;
+
+        result = lockdownd_query_type(client, &type);
+        if (result != LOCKDOWN_E_SUCCESS)
+            break;
+
+        if (type)
+        {
+            lockdownd_free(&type);
+            type = nullptr;
+        }
+
+        if (client)
+        {
+            lockdownd_client_free(client);
+            client = nullptr;
+        }
+
+        result = lockdownd_client_new_with_handshake(device, &client, "vd");
+
+    } while (false);
+
+    if (type)
+    {
+        lockdownd_free(&type);
+        type = nullptr;
+    }
+
+    if (client)
+    {
+        lockdownd_client_free(client);
+        client = nullptr;
+    }
+
+    if (device)
+    {
+        idevice_free(device);
+        device = nullptr;
+    }
+
+    return result;
+}
+
 int iOSDeviceActivator::SyncTimeIntervalSince1970(idevice_t device)
 {
     int result = ERROR_SUCCESS;
@@ -934,7 +1011,11 @@ int iOSDeviceActivator::SyncTimeIntervalSince1970(idevice_t device)
     {
         result = lockdownd_client_new_with_handshake(device, &client, "pp");
         if (result != LOCKDOWN_E_SUCCESS)
-            break;
+        {
+            result = lockdownd_client_new(device, &client, "pp");
+            if (result != LOCKDOWN_E_SUCCESS)
+                break;
+        }
 
         result = lockdownd_get_value(client, nullptr, "TimeIntervalSince1970", &since_time_value);
         if (result != LOCKDOWN_E_SUCCESS)
@@ -970,12 +1051,6 @@ int iOSDeviceActivator::SyncTimeIntervalSince1970(idevice_t device)
             break;
 
     } while (false);
-
-    if (sync_time_value)
-    {
-        plist_free(sync_time_value);
-        sync_time_value = nullptr;
-    }
 
     if (since_time_value)
     {
@@ -1048,7 +1123,7 @@ int iOSDeviceActivator::SetupWifiConnection(lockdownd_client_t client, const cha
         wifi_setting_data = plist_new_data(wifi_setting_xml, wifi_setting_length);
         if (wifi_setting_xml)
         {
-            mi_free(wifi_setting_xml);
+            free(wifi_setting_xml);
             wifi_setting_xml = nullptr;
         }
 
@@ -1121,7 +1196,7 @@ int iOSDeviceActivator::SetupWifiConnection(lockdownd_client_t client, const cha
 
     if (wifi_status_string)
     {
-        mi_free(wifi_status_string);
+        free(wifi_status_string);
         wifi_status_string = nullptr;
     }
 
@@ -1151,7 +1226,7 @@ int iOSDeviceActivator::SetupWifiConnection(lockdownd_client_t client, const cha
 
     if (wifi_setting_xml)
     {
-        mi_free(wifi_setting_xml);
+        free(wifi_setting_xml);
         wifi_setting_xml = nullptr;
     }
 
@@ -1275,7 +1350,7 @@ int iOSDeviceActivator::SetupCloudConfiguration(lockdownd_client_t client, plist
 
     if (status_string)
     {
-        mi_free(status_string);
+        free(status_string);
         status_string = nullptr;
     }
 
@@ -1596,7 +1671,7 @@ uint32_t iOSDeviceActivator::GetProductVersion(lockdownd_client_t client)
     
     if (product_version_string)
     {
-        mi_free(product_version_string);
+        free(product_version_string);
         product_version_string = nullptr;
     }
 

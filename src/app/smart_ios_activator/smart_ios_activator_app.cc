@@ -136,7 +136,7 @@ int SmartiOSActivatorApp::InitApp()
 			break;
 		}
 
-		if (!SmartLogInitialize(log_path))
+		if (!SmartLogInitialize(log_path, nullptr, BASE_LOG_LEVEL_INFO, false, BASE_LOG_CRYPTO_KEY))
 		{
 			result = ERROR_LOG_STATE_INVALID;
 			break;

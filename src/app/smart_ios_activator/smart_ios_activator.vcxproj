@@ -107,15 +107,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4996;4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;$(SolutionDir)lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_base.lib;smart_adv.lib;smart_ios.lib;mimalloc.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;$(SolutionDir)lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>smart_base.lib;smart_adv.lib;smart_ios.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
@@ -149,12 +149,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;$(SolutionDir)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;$(SolutionDir)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_based.lib;smart_advd.lib;smart_iosd.lib;mimallocd.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
@@ -175,13 +175,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN64;_WINDOWS;_DEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4996;4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x64;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;$(SolutionDir)lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>smart_based.lib;smart_advd.lib;smart_iosd.lib;mimallocd.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x64;$(SolutionDir)3rdparty\lib\x64;$(SolutionDir)lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>smart_based.lib;smart_advd.lib;smart_iosd.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <HeapReserveSize>
@@ -213,14 +213,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\inc;$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\inc;$(SolutionDir)3rdparty\inc;$(SolutionDir)inc;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005;4244;4996;4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\3rdparty\lib\x86;$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;$(SolutionDir)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\smart-library\cpp\smart-core\lib\x86;$(SolutionDir)3rdparty\lib\x86;$(SolutionDir)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>smart_base.lib;smart_adv.lib;smart_ios.lib;mimalloc.lib;rpcrt4.lib;shlwapi.lib;setupapi.lib;cfgmgr32.lib;newdev.lib;userenv.lib;wtsapi32.lib;crypt32.lib;bcrypt.lib;secur32.lib;wsock32.lib;ws2_32.lib;mfplat.lib;mfuuid.lib;strmiids.lib;winmm.lib;version.lib;imm32.lib;vfw32.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>

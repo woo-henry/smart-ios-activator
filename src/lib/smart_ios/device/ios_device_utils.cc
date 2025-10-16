@@ -3,7 +3,6 @@
 #include <smart_ios.h>
 #include <direct.h>
 #include <shlwapi.h>
-#include <boost/algorithm/string.hpp>
 #include "device/ios_device_utils.h"
 
 #define MAX_PROCESS_BUFFER		1024 * 1024
@@ -425,12 +424,6 @@ bool ReadAndCompareProcessBufferA(const char* process_path, bool sync_process, c
 
 			for (int i = 0; i < array_size; i++)
 			{
-				if (boost::ifind_first(process_temp_buffer, compare_string_array[i]))
-				{
-					result = true;
-					break;
-				}
-
 				if (StrStrIA(process_temp_buffer, compare_string_array[i]))
 				{
 					result = true;
@@ -549,12 +542,6 @@ bool ReadAndCompareProcessBufferW(const wchar_t* process_path, bool sync_process
 
 		for (int i = 0; i < array_size; i++)
 		{
-			if (boost::ifind_first(process_buffer_w, compare_string_array[i]))
-			{
-				result = true;
-				break;
-			}
-
 			if (StrStrIW(process_buffer_w, compare_string_array[i]))
 			{
 				result = true;

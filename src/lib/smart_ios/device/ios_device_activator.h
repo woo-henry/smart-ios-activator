@@ -22,6 +22,7 @@ public:
 	int QueryDeviceState(const char* device_id, bool* activated, bool* setup_done);
 	int SetupDoneDevice(idevice_t device, const char* wifi_ssid, const char* wifi_password);
 protected:
+	int ValidateDevice(const char* device_id);
 	int SyncTimeIntervalSince1970(idevice_t device);
 	int SetupWifiConnection(lockdownd_client_t client, const char* wifi_ssid, const char* wifi_password);
 	int SetupLanguage(lockdownd_client_t client, bool chinese);

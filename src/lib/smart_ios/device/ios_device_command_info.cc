@@ -3,7 +3,7 @@
 #include <smart_ios.h>
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/lockdown.h>
-#include <mimalloc.h>
+
 #include "device/ios_device_command_info.h"
 
 #ifndef IOS_DEVICE_MAC_EPOCH
@@ -70,12 +70,16 @@ int iOSDeviceCommandInfo::GetDeviceInfo(const char* device_id, std::map<std::str
         if (interrupt)
             break;
 
-        result = lockdownd_client_new_with_handshake(device, &client, "ideviceinfo");
+        result = lockdownd_client_new_with_handshake(device, &client, "di");
         if (result != LOCKDOWN_E_SUCCESS)
         {
-            if (result == LOCKDOWN_E_INVALID_HOST_ID)
+            result = lockdownd_client_new(device, &client, "di");
+            if (result != LOCKDOWN_E_SUCCESS)
             {
-                result = IOS_ERROR_DEVICE_NEED_PAIR;
+                if (result == LOCKDOWN_E_INVALID_HOST_ID)
+                {
+                    result = IOS_ERROR_DEVICE_NEED_PAIR;
+                }
             }
             break;
         }
@@ -174,7 +178,7 @@ int iOSDeviceCommandInfo::GetDeviceDictInfo(plist_t node, int* indent_level, std
 
         if (key)
         {
-            mi_free(key);
+            free(key);
             key = nullptr;
         }
         
@@ -183,7 +187,7 @@ int iOSDeviceCommandInfo::GetDeviceDictInfo(plist_t node, int* indent_level, std
 
     if (it)
     {
-        mi_free(it);
+        free(it);
         it = nullptr;
     }
 
@@ -327,7 +331,7 @@ void iOSDeviceCommandInfo::GetDeviceNodeStringInfo(plist_t node, const char* key
     if (value)
     {
         device_info->insert(std::pair<std::string, std::string>(key, value));
-        mi_free(value);
+        free(value);
         value = nullptr;
     }
 }
@@ -339,7 +343,7 @@ void iOSDeviceCommandInfo::GetDeviceNodeKeyInfo(plist_t node, const char* key, s
     if (value)
     {
         device_info->insert(std::pair<std::string, std::string>(key, value));
-        mi_free(value);
+        free(value);
         value = nullptr;
     }
 }
@@ -366,13 +370,13 @@ void iOSDeviceCommandInfo::GetDeviceNodeDataInfo(plist_t node, const char* key, 
     
     if (value_string)
     {
-        mi_free(value_string);
+        free(value_string);
         value_string = nullptr;
     }
 
     if (value)
     {
-        mi_free(value);
+        free(value);
         value = nullptr;
     }
 }
@@ -390,7 +394,7 @@ void iOSDeviceCommandInfo::GetDeviceNodeDateInfo(plist_t node, const char* key, 
         if (btime == nullptr)
             break;
 
-        value_string = (char*)mi_malloc(24);
+        value_string = (char*)malloc(24);
         if (value_string == nullptr)
             break;
 
@@ -405,7 +409,7 @@ void iOSDeviceCommandInfo::GetDeviceNodeDateInfo(plist_t node, const char* key, 
 
     if (value_string)
     {
-        mi_free(value_string);
+        free(value_string);
         value_string = nullptr;
     }
 }
@@ -416,7 +420,7 @@ char* iOSDeviceCommandInfo::Base64Encode(const unsigned char* buf, size_t size)
         return nullptr;
 
     size_t length = (size / 3) * 4;
-    char* result = (char*)mi_malloc(length + 5); // 4 spare bytes + 1 for '\0'
+    char* result = (char*)malloc(length + 5); // 4 spare bytes + 1 for '\0'
     if (result == nullptr)
         return nullptr;
 

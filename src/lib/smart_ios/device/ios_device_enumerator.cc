@@ -106,6 +106,7 @@ int iOSDeviceEnumerator::EnumDevices()
             if (_enum_devices_shutdown)
                 break;
 
+            /*
             DEVINST dev_root;
             result = CM_Locate_DevNodeA(&dev_root, nullptr, CM_LOCATE_DEVNODE_NORMAL);
             if (result != CR_SUCCESS)
@@ -178,6 +179,9 @@ int iOSDeviceEnumerator::EnumDevices()
                     dev_queue.push(dev_child);
                 }
             }
+            */
+
+            result = EnumDeviceIds(&device_ids);
 
             for (std::vector<std::string>::const_iterator it = device_ids.begin(); it != device_ids.end(); it++)
             {
@@ -272,6 +276,9 @@ int iOSDeviceEnumerator::EnumDeviceIds(std::vector<std::string>* device_ids)
 
         for (int i = 0; i < dev_count; i++)
         {
+            if (_enum_devices_shutdown)
+                break;
+
             if (dev_list[i] == nullptr)
                 continue;
 

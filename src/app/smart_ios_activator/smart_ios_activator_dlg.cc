@@ -822,11 +822,11 @@ DWORD WINAPI SmartiOSActivatorDlg::ActivateAllDeviceThreadRoutine(PVOID paramete
 			result = ActivateiOSDevice(context->device_id, true, context->wifi_ssid, context->wifi_password);
 			if (result != ERROR_SUCCESS)
 			{
-				AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)context, (LPARAM)result);
+				this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_ERROR, (WPARAM)context, (LPARAM)result);
 			}
 			else
 			{
-				AfxGetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)context);
+				this_app.GetMainWnd()->PostMessageW(WM_IOS_DEVICE_MESSAGE_SUCCESS, (WPARAM)context);
 			}
 
 			result = QueryiOSDevice(context->device_id);
